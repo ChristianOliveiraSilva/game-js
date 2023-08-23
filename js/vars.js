@@ -13,7 +13,8 @@ const imagesSrc = [
     'media/img/player.png',
     'media/img/mapa.png',
     'media/img/chao.png',
-    'media/img/items1.png'
+    'media/img/items1.png',
+    'media/img/wolf.png',
 ]
 const videosSrc = []
 
@@ -46,6 +47,17 @@ const convertImageToImageData = (image) => {
     return ctxConverter.getImageData(0, 0, canvasConverter.width, canvasConverter.height);
 };
 
+const tag = {
+    player: 'player',
+    sheep: 'sheep',
+    wolf: 'wolf',
+    villager: 'villager',
+}
+
+const IA = {
+    predator: 'predator',
+    prey: 'prey',
+}
 
 // prefabs
 const tree1 = {
@@ -139,31 +151,98 @@ const getObjMap = () => {
             green == 130 &&
             blue == 56
           ) {
-              allObjs.push({
-                x: x * 50,
-                y: y * 50,
-                ...getRandomObj([tree6, tree2,tree1, tree3,tree4, tree5]),
-              })
+            //   allObjs.push({
+            //     x: x * 50,
+            //     y: y * 50,
+            //     ...getRandomObj([tree6, tree2,tree1, tree3,tree4, tree5]),
+            //   })
           }
         }
       }
 
-    return allObjs
+    return []
 }
 
 // items
 
-let genericItemIndex = 0
-for (let i = 1; i <= 150; i++) {
-    let locX = Math.floor(Math.abs(50 * Math.sin(i) + 0.5 * Math.sin(5 * i) + 0.3 * Math.sin(10 * i) + 0.2 * Math.sin(20 * i)) * 2e2)
-    let locY = Math.floor(Math.abs(40 * Math.sin(10 * i) + 0.2 * Math.sin(20 * i)) * 3e2)
+// let genericItemIndex = 0
+// for (let i = 1; i <= 150; i++) {
+//     let locX = Math.floor(Math.abs(50 * Math.sin(i) + 0.5 * Math.sin(5 * i) + 0.3 * Math.sin(10 * i) + 0.2 * Math.sin(20 * i)) * 2e2)
+//     let locY = Math.floor(Math.abs(40 * Math.sin(10 * i) + 0.2 * Math.sin(20 * i)) * 3e2)
 
-    console.log(i, locX, locY);
-    items.push({
-        x: locX,
-        y: locY,
-        sx: (genericItemIndex++ % 16) * genericItem.width,
+//     console.log(i, locX, locY);
+//     items.push({
+//         x: locX,
+//         y: locY,
+//         sx: (genericItemIndex++ % 16) * genericItem.width,
+//         sy: 0,
+//         ...genericItem
+//     })
+// }
+
+
+
+// mobs
+
+let mobs = [
+    {
+        x: player.x,
+        y: player.y + 150,
+        width: 85,
+        height: 64,
+        imgIndex: 5,
+        sx: 3,
         sy: 0,
-        ...genericItem
-    })
-}
+        tags: [tag.wolf],
+        enemies: [tag.sheep],
+        hp: 100,
+        speed: 1,
+        attack: 15,
+        defense: 15,
+        hunger: 100,
+        thirst: 100,
+        sleep: 100,
+        drop: [
+            {
+                sx: 0,
+                sy: 0,
+                ...genericItem
+            }
+        ],
+        IA: {
+            type: IA.predator,
+        },
+    },
+    {
+        x: player.x + 150,
+        y: player.y + 150,
+        width: 89,
+        height: 65,
+        imgIndex: 5,
+        sx: 100,
+        sy: 0,
+        tags: [tag.sheep],
+        enemies: [tag.wolf],
+        hp: 75,
+        speed: 2,
+        attack: 0,
+        defense: 0,
+        hunger: 100,
+        thirst: 100,
+        sleep: 100,
+        drop: [
+            {
+                sx: 0,
+                sy: 0,
+                ...genericItem
+            }
+        ],
+        IA: {
+            type: IA.prey,
+        },
+    },
+
+]
+
+
+

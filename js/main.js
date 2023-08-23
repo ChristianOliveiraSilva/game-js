@@ -28,6 +28,8 @@ const startGame = () => {
     
     setEvents()
     runGame()
+
+    setTimeout(() => {end = true}, 1e4/3)
 }
 
 const runGame = () => {

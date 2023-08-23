@@ -3,8 +3,8 @@
 
 const render = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const playerOffsetX = canvas.width / 2
-    const playerOffsetY = canvas.height / 2
+    const cameraOffsetX = canvas.width / 2
+    const cameraOffsetY = canvas.height / 2
 
     // floor
     // ctx.fillStyle = "green";
@@ -14,12 +14,12 @@ const render = () => {
             ctx.drawImage(images[FLOOR_INDEX], indexX, indexY, 50, 50);
         }
 
-    const displayableObjects = [...objs, ...items, player]
+    const displayableObjects = [...objs, ...mobs, ...items, player]
 
     // objs
     displayableObjects.sort((a, b) => a.y - b.y).forEach(obj => {
-        const offsetX = obj.x - obj.width / 2 + (playerOffsetX - player.x)
-        const offsetY = obj.y - obj.height + (playerOffsetY - player.y)
+        const offsetX = obj.x - obj.width / 2 + (cameraOffsetX - mobs[0].x)
+        const offsetY = obj.y - obj.height + (cameraOffsetY - mobs[0].y)
         
         ctx.fillStyle = "black";
         ctx.fillText(`${obj.x}/${obj.y}`, offsetX, offsetY);
