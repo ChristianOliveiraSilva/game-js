@@ -110,8 +110,8 @@ const genericItem = {
 
 // player
 const player = {
-    x: 2500,
-    y: 2500,
+    x: 0,
+    y: 0,
     orientation: 's',
     width: 53,
     height: 65,
@@ -160,7 +160,7 @@ const getObjMap = () => {
         }
       }
 
-    return []
+    return allObjs
 }
 
 // items

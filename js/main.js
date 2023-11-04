@@ -1,6 +1,6 @@
 
 window.onload = () => {
-    startGame()
+    // startGame()
 }
 
 const resize = () => {
@@ -29,7 +29,7 @@ const startGame = () => {
     setEvents()
     runGame()
 
-    setTimeout(() => {end = true}, 1e4/3)
+    // setTimeout(() => {end = true}, 3e3)
 }
 
 const runGame = () => {

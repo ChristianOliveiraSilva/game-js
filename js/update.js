@@ -14,17 +14,16 @@ const update = () => {
         playerCoods.y = player.y
     }
 
-    mobs = mobs.map(e => {
+    // mobs = mobs.map(e => {
+    //     const mobOffensive = mobs.find(m => calcDistance(e.x, e.y, m.x, m.y) < 10)
+    //     const damage = mobOffensive ? mobOffensive.attack : 0
 
+    //     return {
+    //         ...e,
+    //         x: e.x + e.speed,
+    //         y: e.y + e.speed,
+    //         hp: damage ? e.hp - (damage - e.defense) : e.hp,
+    //     }
+    // }).filter(e => e.hp > 0);
 
-        const mobOffensive = mobs.find(m => calcDistance(e.x, e.y, m.x, m.y) < 10)
-        const damage = mobOffensive ? mobOffensive.attack : 0
-
-        return {
-            ...e,
-            x: e.x + e.speed,
-            y: e.y + e.speed,
-            hp: damage ? e.hp - (damage - e.defense) : e.hp,
-        }
-    }).filter(e => e.hp > 0);
 }

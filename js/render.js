@@ -18,8 +18,8 @@ const render = () => {
 
     // objs
     displayableObjects.sort((a, b) => a.y - b.y).forEach(obj => {
-        const offsetX = obj.x - obj.width / 2 + (cameraOffsetX - mobs[0].x)
-        const offsetY = obj.y - obj.height + (cameraOffsetY - mobs[0].y)
+        const offsetX = obj.x - obj.width / 2 + (cameraOffsetX - player.x)
+        const offsetY = obj.y - obj.height + (cameraOffsetY - player.y)
         
         ctx.fillStyle = "black";
         ctx.fillText(`${obj.x}/${obj.y}`, offsetX, offsetY);
@@ -29,7 +29,20 @@ const render = () => {
             offsetX, offsetY, obj.width, obj.height)
     })
 
+
+    //efeitos?
+    ctx.fillStyle = "red";
+    for (let index = 0; index < 1e3; index++) {
+        ctx.fillRect(
+            (cameraOffsetX - player.x) + generateRandomNumber(-index / 10, index / 10),
+            (cameraOffsetY - player.y) + generateRandomNumber(-index / 10, index / 10),
+            1,
+            1
+        );
+    }
+
     // HUD
+    ctx.fillStyle = "black";
     ctx.font = "16px Arial";
     ctx.fillText("Hello World", 10, 50);
 }
