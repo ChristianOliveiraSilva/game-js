@@ -1,3 +1,4 @@
+import BasicAI from "./AI/basicAI.mjs"
 import Img from "/js/modules/resources/img.mjs"
 
 export default class Mob {
@@ -8,8 +9,8 @@ export default class Mob {
     y = 0
     width = 53
     height = 65
-    // tags = [tag.wolf]
-    // enemies = [tag.sheep]
+    tags = []
+    enemies = []
     hp = 100
     speed = 1
     xp = 0
@@ -19,7 +20,7 @@ export default class Mob {
     thirst = 100
     sleep = 100
     drops = []
-    // IA = IA.predator
+    IA = new BasicAI
     items = []
     effects = []
     skills = []
@@ -30,33 +31,43 @@ export default class Mob {
     }
 
     update(world) {
-
+        this.IA.update(world, this)
     }
 
-    onAttack(world, skill) {
+    // troquei o nome dessa bosta e agr fudeu
+
+    attack(world, skill) {
         const basicDamage = skill ? skill.attack : this.attack
-        const xpDamage = this.xp 
-        const effectsDamage = this.effects.reduce((total, effect) => total + effect.passiveAttack ?? 0)
-        const itemsDamage = this.items.reduce((total, item) => total + item.passiveAttack ?? 0)
-        const skillsDamage = this.skills.reduce((total, skill) => total + skill.passiveAttack ?? 0)
+        const xpDamage = this.xp
+        const effectsDamage = this.effects.reduce((total, effect) => total + effect.passiveAttack ?? 0, 0)
+        const itemsDamage = this.items.reduce((total, item) => total + item.passiveAttack ?? 0, 0)
+        const skillsDamage = this.skills.reduce((total, skill) => total + skill.passiveAttack ?? 0, 0)
 
         const damage = basicDamage + xpDamage + effectsDamage + itemsDamage + skillsDamage 
-        const types = this.primaryItem.types
+        const types = this.primaryItem?.types ?? []
 
-        return {
+        const attack = {
             from: this,
             skill,
             types,
             damage,
         }
+
+        // find near mobs
+        world.objs.forEach(obj => {
+            if (this !== obj && obj.defend) {
+                obj.defend(world, attack)
+                console.log(obj.hp);
+            }
+        });
     }
 
-    onDefend(world, attack) {
+    defend(world, attack) {
         const basicDefense = this.defense
         const xpDefense = Math.round(this.xp / 2)
-        const effectsDefense = this.effects.reduce((total, effect) => total + effect.passiveDefence ?? 0)
-        const itemsDefense = this.items.reduce((total, item) => total + item.passiveDefence ?? 0)
-        const skillsDefense = this.skills.reduce((total, skill) => total + skill.passiveDefence ?? 0)
+        const effectsDefense = this.effects.reduce((total, effect) => total + effect.passiveDefence ?? 0, 0)
+        const itemsDefense = this.items.reduce((total, item) => total + item.passiveDefence ?? 0, 0)
+        const skillsDefense = this.skills.reduce((total, skill) => total + skill.passiveDefence ?? 0, 0)
 
         const defense = basicDefense + xpDefense + effectsDefense + itemsDefense + skillsDefense
 

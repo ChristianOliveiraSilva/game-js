@@ -1,7 +1,7 @@
 
 import World from '/js/modules/world/world.mjs'
-import Render from 'js/modules/world/render.mjs'
-import Update from '/js/modules/world/update.mjs'
+import Render from '/js/modules/render.mjs'
+import Update from '/js/modules/update.mjs'
 
 const GameStage = {
     LOADING: 'LOADING',
