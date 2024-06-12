@@ -4,10 +4,10 @@ export default class AI {
     targetY = 0
 
     update(world, mob) {
-        this.updateCoors(world, mob)
+        this.updateCoords(world, mob)
     }
 
-    updateCoors(world, mob) {
+    updateCoords(world, mob) {
         if (this.targetX < mob.x) {
             mob.x -= mob.speed
         } else if (this.targetX > mob.x) {

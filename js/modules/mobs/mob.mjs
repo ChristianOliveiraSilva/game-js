@@ -34,9 +34,7 @@ export default class Mob {
         this.IA.update(world, this)
     }
 
-    // troquei o nome dessa bosta e agr fudeu
-
-    attack(world, skill) {
+    toAttack(world, skill) {
         const basicDamage = skill ? skill.attack : this.attack
         const xpDamage = this.xp
         const effectsDamage = this.effects.reduce((total, effect) => total + effect.passiveAttack ?? 0, 0)
@@ -62,7 +60,7 @@ export default class Mob {
         });
     }
 
-    defend(world, attack) {
+    toDefend(world, attack) {
         const basicDefense = this.defense
         const xpDefense = Math.round(this.xp / 2)
         const effectsDefense = this.effects.reduce((total, effect) => total + effect.passiveDefence ?? 0, 0)

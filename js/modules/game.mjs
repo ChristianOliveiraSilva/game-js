@@ -30,9 +30,9 @@ export default class Game {
         this.setEvents()
 
         // temporario
-        setTimeout(() => {
-            this.stage = GameStage.STOP
-        }, 1e5)
+        // setTimeout(() => {
+        //     this.stage = GameStage.STOP
+        // }, 1e5)
     }
 
     loadAssets() {
@@ -81,9 +81,15 @@ export default class Game {
     }
 
     run() {
-        // if (!!true) {
-        //     return
-        // }
+        console.log({getSeason: this.world.getSeason(), getWeather: this.world.getWeather()});
+
+        if (!!true) {
+            return
+        }
+
+        if (this.world.shouldFinishGame()) {
+            this.stage = GameStage.STOP
+        }
 
         if (this.stage === GameStage.LOADING) {
             console.log('debug: GameStage.LOADING');
@@ -106,6 +112,7 @@ export default class Game {
             requestAnimationFrame(() => this.run())
         } else {
             console.log('debug: finalizando');
+            console.log('debug: finalizado');
         }
     }
 
