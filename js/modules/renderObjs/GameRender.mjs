@@ -1,5 +1,5 @@
 
-export default class Render {
+export default class GameRender {
     constructor (world, canvas, ctx) {
         this.world = world
         this.canvas = canvas
@@ -7,18 +7,18 @@ export default class Render {
     }
 
     drawBackground() {
-        this.ctx.fillStyle = "green";
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = "green"
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
     }
 
     run() {
         const { world, canvas, ctx } = this
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.drawBackground()
 
         world.renderable.forEach(element => {
             element.render(world, canvas, ctx)
-        });
+        })
     }
 }

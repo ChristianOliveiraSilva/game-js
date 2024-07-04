@@ -1,6 +1,7 @@
 
-import Img from '/js/modules/resources/img.mjs';
-import Mob from '/js/modules/mobs/mob.mjs';
+import Img from '/js/modules/resources/img.mjs'
+import Mob from '/js/modules/mobs/mob.mjs'
+import ConsumeItem from '../items/ConsumeItem.mjs'
 
 export default class Player extends Mob {
     img = new Img('/media/img/player.png', 11, 17)
@@ -27,17 +28,25 @@ export default class Player extends Mob {
                 this.toAttack(world, this.skills[3])
             }
         }
+            
+        if (keys.KeySpace && this.primaryItem instanceof ConsumeItem) {
+            this.primaryItem.use(world, this)
+        }
 
         if (mouse.click) {
             const {x, y} = mouse
             mouse.click = false
 
-            this.toAttack(world, null)
+            if (this.primaryItem) {
+                this.primaryItem.use(world, this)
+            } else {
+                this.toAttack(world, this.primaryItem)
+            }
 
             this.IA.targetX = x
             this.IA.targetY = y
         }
 
-        this.IA.update(world, this)
+        this.IA.updateCoords(world, this)
     }
 }

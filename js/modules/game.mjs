@@ -1,18 +1,22 @@
 
 import World from '/js/modules/world/world.mjs'
-import Render from '/js/modules/render.mjs'
-import Update from '/js/modules/update.mjs'
+import GameRender from '/js/modules/renderObjs/GameRender.mjs'
+import GameUpdate from '/js/modules/updateObjs/GameUpdate.mjs'
+import LoadingRender from '/js/modules/renderObjs/LoadingRender.mjs'
+import LoadingUpdate from '/js/modules/updateObjs/LoadingUpdate.mjs'
+import MenuRender from '/js/modules/renderObjs/MenuRender.mjs'
+import MenuUpdate from '/js/modules/updateObjs/MenuUpdate.mjs'
 
 const GameStage = {
     LOADING: 'LOADING',
     MENU: 'MENU',
     RUNNING: 'RUNNING',
     STOP: 'STOP',
-};
+}
 
 export default class Game {
     stage = GameStage.LOADING
-    assets = [];
+    assets = []
 
     constructor() {
         this.startTime = Date.now()
@@ -23,16 +27,19 @@ export default class Game {
         this.canvas.height = window.innerHeight
 
         this.world = new World()
-        this.renderObj = new Render(this.world, this.canvas, this.ctx)
-        this.updateObj = new Update(this.world, this.canvas, this.ctx)
+        this.renders = {
+            [GameStage.LOADING]: new LoadingRender(this.world, this.canvas, this.ctx),
+            [GameStage.MENU]: new MenuRender(this.world, this.canvas, this.ctx),
+            [GameStage.RUNNING]: new GameRender(this.world, this.canvas, this.ctx),
+        }
+        this.updaters = {
+            [GameStage.LOADING]: new LoadingUpdate(this.world, this.canvas, this.ctx),
+            [GameStage.MENU]: new MenuUpdate(this.world, this.canvas, this.ctx),
+            [GameStage.RUNNING]: new GameUpdate(this.world, this.canvas, this.ctx),
+        }
 
         this.loadAssets()
         this.setEvents()
-
-        // temporario
-        // setTimeout(() => {
-        //     this.stage = GameStage.STOP
-        // }, 1e5)
     }
 
     loadAssets() {
@@ -44,7 +51,7 @@ export default class Game {
             const canStart = loadeds.every(value => value === true)
             
             if (canStart) {
-                console.log("debug: iniciando");
+                console.log("debug: iniciando")
                 clearInterval(intervalId)
                 this.stage = GameStage.RUNNING
             }
@@ -53,74 +60,68 @@ export default class Game {
 
     setEvents() {
         window.addEventListener('keydown', (e) => {
-            if (this.updateObj.controls.keys.hasOwnProperty(e.code)) {
-                this.updateObj.controls.keys[e.code] = true;
+            const updateObj = this.updaters[this.stage]
+
+            if (updateObj.controls && updateObj.controls.keys.hasOwnProperty(e.code)) {
+                updateObj.controls.keys[e.code] = true
             }
-        });
+        })
         
         window.addEventListener('keyup', (e) => {
-            console.log('keyup: ', {code: e.code})
+            const updateObj = this.updaters[this.stage]
 
-            if (this.updateObj.controls.keys.hasOwnProperty(e.code)) {
-                this.updateObj.controls.keys[e.code] = false;
+            if (updateObj.controls && updateObj.controls.keys.hasOwnProperty(e.code)) {
+                updateObj.controls.keys[e.code] = false
             }
-        });
+        })
 
         this.canvas.addEventListener('mousemove', (e) => {
-            const rect = this.canvas.getBoundingClientRect();
-            this.updateObj.controls.mouse.x = e.clientX - rect.left;
-            this.updateObj.controls.mouse.y = e.clientY - rect.top;
-        });
+            const updateObj = this.updaters[this.stage]
+
+            if (updateObj.controls) {
+                const rect = this.canvas.getBoundingClientRect()
+                updateObj.controls.mouse.x = e.clientX - rect.left
+                updateObj.controls.mouse.y = e.clientY - rect.top
+            }
+        })
 
         this.canvas.addEventListener('click', (e) => {
-            const rect = this.canvas.getBoundingClientRect();
-            this.updateObj.controls.mouse.x = e.clientX - rect.left;
-            this.updateObj.controls.mouse.y = e.clientY - rect.top;
-            this.updateObj.controls.mouse.click = true;
+            const updateObj = this.updaters[this.stage]
+
+            if (updateObj.controls) {
+                const rect = this.canvas.getBoundingClientRect()
+                updateObj.controls.mouse.x = e.clientX - rect.left
+                updateObj.controls.mouse.y = e.clientY - rect.top
+                updateObj.controls.mouse.click = true
+            }
         })
     }
 
     run() {
-        console.log({getSeason: this.world.getSeason(), getWeather: this.world.getWeather()});
-
-        if (!!true) {
-            return
-        }
-
         if (this.world.shouldFinishGame()) {
             this.stage = GameStage.STOP
         }
 
-        if (this.stage === GameStage.LOADING) {
-            console.log('debug: GameStage.LOADING');
-        }
-
-        if (this.stage === GameStage.MENU) {
-            console.log('debug: GameStage.MENU');
-        }
-
-        if (this.stage === GameStage.RUNNING) {
+        if (this.stage !== GameStage.STOP) {
             if (Date.now() % 39 == 0) {
-                console.log('debug: rodando');
+                console.log('debug: ' + this.stage)
             }
 
             this.render()
             this.update()
-        }
-
-        if (this.stage !== GameStage.STOP) {
+            
             requestAnimationFrame(() => this.run())
         } else {
-            console.log('debug: finalizando');
-            console.log('debug: finalizado');
+            console.log('debug: finalizando')
+            console.log('debug: finalizado')
         }
     }
 
     render() {
-        this.renderObj.run()
+        this.renders[this.stage].run()
     }
 
     update() {
-        this.updateObj.run()
+        this.updaters[this.stage].run()
     }
 }

@@ -12,19 +12,21 @@ export default class Mob {
     tags = []
     enemies = []
     hp = 100
-    speed = 1
+    energy = 100
+    speed = 3
     xp = 0
     attack = 15
     defense = 15
     hunger = 100
     thirst = 100
-    sleep = 100
     drops = []
     IA = new BasicAI
     items = []
     effects = []
     skills = []
     primaryItem = null
+    orientation = 'down'
+    target = null
 
     render(world, canvas, ctx) {
         this.img.render(ctx, this)
@@ -55,9 +57,8 @@ export default class Mob {
         world.objs.forEach(obj => {
             if (this !== obj && obj.defend) {
                 obj.defend(world, attack)
-                console.log(obj.hp);
             }
-        });
+        })
     }
 
     toDefend(world, attack) {

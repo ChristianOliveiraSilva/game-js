@@ -1,7 +1,6 @@
-import Game from "/js/modules/game.mjs";
+import Game from "/js/modules/game.mjs"
 
 window.onload = () => {
     const game = new Game()
     game.run()
 }
-

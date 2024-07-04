@@ -1,6 +1,6 @@
 
 
-export default class Update {
+export default class GameUpdate {
     controls = {}
 
     constructor (world, canvas, ctx) {
@@ -13,18 +13,20 @@ export default class Update {
             KeyW: false,
             KeyE: false,
             KeyR: false,
+            KeySpace: false,
         }
 
         this.controls.mouse = {
             x: 0,
             y: 0,
             click: false,
-        };
+        }
     }
 
     run() {
+        this.world.update()
         this.world.updateable.forEach(element => {
             element.update(this.world, this.controls)
-        });
+        })
     }
 }

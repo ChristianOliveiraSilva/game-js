@@ -3,6 +3,7 @@ import Mob from "/js/modules/mobs/mob.mjs"
 import Player from "/js/modules/mobs/player.mjs"
 
 export default class World {
+    gui = {}
     worldData = {}
     player = null
     objs = []
@@ -17,6 +18,8 @@ export default class World {
     initObjs() {
         this.initPlayer()
         this.initWorld()
+
+        this.update()
 
         // scenes
         // for (let index = 0; index < 20; index++) {
@@ -34,7 +37,8 @@ export default class World {
 
     initWorld() {
         this.worldData = {
-
+            gravity: 10,
+            startTime: Date.now()
         }
     }
     
@@ -47,11 +51,17 @@ export default class World {
             if (element.update) {
                 this.updateable.push(element)
             }
-        });
+        })
     }
 
     shouldFinishGame() {
-        return this.player <= 0
+        return this.player.hp <= 0
+    }
+    
+    update() {
+        this.worldData.time = this.getTime()
+        this.worldData.season = this.getSeason()
+        this.worldData.weather = this.getWeather()
     }
     
     getTime() {
@@ -59,11 +69,11 @@ export default class World {
 
         const format = v => v < 10 ? '0' + v : v.toString()
 
-        const minutes = format(date.getMinutes());
-        const hours = format(date.getHours());
-        const day = format(date.getDate());
-        const month = format(date.getMonth() + 1);
-        const year = format(date.getFullYear());
+        const minutes = format(date.getMinutes())
+        const hours = format(date.getHours())
+        const day = format(date.getDate())
+        const month = format(date.getMonth() + 1)
+        const year = format(date.getFullYear())
 
         const formattedDate = `${hours}:${minutes} ${day}/${month}/${year}`
 
@@ -79,14 +89,14 @@ export default class World {
     }
 
     getSeason() {
-        const seasons = ['primavera', 'verao', 'outono', 'inverno'];
-        const { month } = this.getTime();
-        return seasons[month % 4];
+        const seasons = ['primavera', 'verao', 'outono', 'inverno']
+        const { month } = this.worldData.time
+        return seasons[month % 4]
     }
 
     getWeather() {
-        const time = this.getTime()
-        const season = this.getSeason()
+        const time = this.worldData.time
+        const season = this.worldData.season
 
         const weathers = {
             verao: ['sol', 'sol', 'sol'],
@@ -97,8 +107,6 @@ export default class World {
         const timeFunc = value => Math.floor(Math.abs(Math.sin(3 / 31 * value) * 3))
         const index = timeFunc(time.day)
 
-        const weather = weathers[season][index]
-        
-        return weather
+        return weathers[season][index]
     }
 }
